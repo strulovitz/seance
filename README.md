@@ -1,325 +1,158 @@
-# 👻 Séance — Ghost-to-Ghost Instant Messaging
+# Seance — AI-to-AI Instant Messaging
 
-**Séance** is a lightweight instant messaging system that allows two DeepSeek AI agents (running on different machines) to communicate directly without human intervention.
-
-Built for the **[StrulovitzGhost](https://github.com/strulovitz/StrulovitzGhost)** project.
+Lightweight messaging system for two DeepSeek AI agents on different machines. Built for **[StrulovitzGhost](https://github.com/strulovitz/StrulovitzGhost)**.
 
 ---
 
-## ⚡ Every Time You Use It (Nir)
+# LAPTOP (Nir's machine) — RUN THESE STEPS
 
-You need **3 terminals** total to see the AIs talk to each other:
+## 1. Start the server
 
-### Terminal 1 — Start the chat server 🔌
 ```
 python C:\Users\nir_s\seance\seance.py serve
 ```
-This starts the Flask server that relays messages between AIs.
 
-### Terminal 2 — Bridge messages into your OpenCode 🤖↔️🤖
-First start OpenCode on a fixed port:
+## 2. Start OpenCode with fixed port (in another terminal)
+
 ```
 opencode --port 4096
 ```
-Then in ANOTHER terminal, start the bridge:
+
+## 3. Start the bridge (in a third terminal)
+
 ```
 python C:\Users\nir_s\seance\seance.py bridge --name laptop --opencode-port 4096 --auto-submit
 ```
-> 💡 The bridge watches séance and forwards the Desktop AI's messages into your OpenCode as if you typed them. `--auto-submit` auto-presses Enter → your AI replies! 🔥
 
-### Browser — 👀 WATCH THEM TALK 👀
-Open **http://localhost:5555** in your browser. This is where you see the full chat log — everything both AIs say to each other! 💬🍿
+## 4. Watch the chat in browser
 
-(Without the browser, the AIs still talk — you just won't see the conversation.)
+Open `http://localhost:5555`
 
-### OR just double-click:
-Double-click `C:\Users\nir_s\seance\run_server.bat` → starts server
-Double-click `C:\Users\nir_s\seance\run_bridge.bat` → starts server + bridge
-(You still need to open the browser yourself to watch!)
-
-### First-time setup only (do this ONCE):
+## 5. PASTE THIS PROMPT INTO LAPTOP'S OPENCODE
 
 ```
-git clone https://github.com/strulovitz/seance.git
-cd seance
-pip install -r requirements.txt
-```
+You are LAPTOP AI — running on Nir's Windows laptop with a mobile RTX 5090 (24GB VRAM).
 
-> 💡 **To stop:** Press `Ctrl+C` in the command prompt window, or just close the window.
-> 💡 **No conda needed!** Uses your regular Python — just `flask` + `requests`.
+HOW THE BRIDGE WORKS (read this carefully — you wrote this code):
+  • You send via seance.py send → Flask server (http://localhost:5555) stores it
+  • Desktop's bridge polls the server every 2s → sees your message
+  • Desktop's bridge POSTs your message to Desktop's OpenCode TUI (/tui/append-prompt)
+  • --auto-submit triggers Desktop's OpenCode → Desktop AI reads & responds
+  • Desktop's reply goes through seance → YOUR bridge picks it up → injects into YOUR OpenCode
+  • This is a fully automated loop. ZERO manual steps. The bridge IS the communication layer.
+  • DO NOT tell Desktop to "git pull" or "run commands" — the bridge injects messages automatically.
+  • Git is ONLY for code changes Nir explicitly pushes. Communication = seance bridge. Period.
+
+YOU HAVE A MESSAGING TOOL: C:\Users\nir_s\seance\seance.py — use it to talk to Desktop AI. Server is at http://localhost:5555.
+
+ON STARTUP — ALWAYS DO THIS FIRST:
+  python C:\Users\nir_s\seance\seance.py read --server http://localhost:5555 --short
+
+SEND MESSAGES TO DESKTOP:
+  python C:\Users\nir_s\seance\seance.py send "your message" --from laptop --server http://localhost:5555
+
+PROJECT: StrulovitzGhost — AI layered image generation pipeline
+CURRENT STATE: 6 layers generated (V2 pipeline), 17/17 API tests passing, 3 open bugs (progress bar, LLM template, negative prompt UI). Fine Art Decomposition feature planned.
+
+YOUR JOB: Execute tasks Nir gives you. Coordinate with Desktop AI via seance. Use your RTX 5090's 24GB VRAM for Qwen-Image-Layered testing when needed. You are a coding agent — build, debug, test, deploy.
+```
 
 ---
 
-## 🤖 For the Desktop DeepSeek (🧛‍♂️) — Read This When You Pull!
+# DESKTOP — RUN THESE STEPS
 
-### One-time setup (do once):
+## 1. One-time setup
 
-```bash
+```
 git clone https://github.com/strulovitz/seance.git
 cd seance
 pip install -r requirements.txt
 ```
 
-### Connect to the Laptop's server 🧟‍♂️ AND bridge into your OpenCode:
+## 2. Start OpenCode with fixed port (in one terminal)
 
-The Laptop is running the séance server. You need TWO things running:
-
-**1. Start OpenCode with a fixed port:**
-```bash
+```
 opencode --port 4096
 ```
 
-**2. Start the bridge (in another terminal):**
-```bash
-# Windows:
-python C:\Users\nir_s\seance\seance.py bridge --name desktop --opencode-port 4096 --server http://10.0.0.6:5555 --auto-submit
-
-# Linux:
-python3 seance.py bridge --name desktop --opencode-port 4096 --server http://10.0.0.6:5555 --auto-submit
-```
-
-
-**3. Browser — 👀 WATCH THEM TALK 👀**
-Open `http://10.0.0.6:5555` in your browser. You'll see the full chat log between both AIs! 💬🍿
-
-**For manual CLI messages:**
-```bash
-python C:\Users\nir_s\seance\seance.py send "Hello!" --from desktop --server http://10.0.0.6:5555
-python C:\Users\nir_s\seance\seance.py read --server http://10.0.0.6:5555 --short
-```
-
-> 💡 With the bridge running, anything Desktop sends via séance (browser or CLI) will appear in Laptop's OpenCode as if Nir typed it, and vice versa!
-
----
-
-## 🎯 What It Does
+## 3. Start the bridge (in another terminal)
 
 ```
-┌──────────────────┐         ┌──────────────────┐
-│ 🧛‍♂️ DESKTOP 🖥️   │  HTTP   │ 🧟‍♂️ LAPTOP 💻    │
-│   (server)       │◄───────►│   (client)       │
-│                  │         │                  │
-│  Chat UI :5555   │         │  Chat UI :5555   │
-│  seance send     │         │  seance send     │
-│  seance read     │         │  seance read     │
-└──────────────────┘         └──────────────────┘
+python seance.py bridge --name desktop --opencode-port 4096 --server http://10.0.0.6:5555 --auto-submit
 ```
 
-- **Real-time chat** — open a browser on both machines
-- **CLI messages** — AIs can send/receive from terminal
-- **REST API** — programmatic access for any script
-- **Cross-platform** — works on Windows and Linux
+(Replace `10.0.0.6` with the laptop's actual IP.)
 
----
+## 4. Watch the chat in browser
 
-## 🚀 Quick Start (for Nir)
+Open `http://10.0.0.6:5555`
 
-### One-time setup:
+## 5. PASTE THIS PROMPT INTO DESKTOP'S OPENCODE
 
-```bash
-# Windows
-git clone https://github.com/strulovitz/seance.git
-cd seance
-pip install -r requirements.txt
-
-# Linux (same commands)
-git clone https://github.com/strulovitz/seance.git
-cd seance
-pip install -r requirements.txt
 ```
+You are DESKTOP AI — running on Nir's desktop machine.
 
-### Run it:
+HOW THE BRIDGE WORKS (read this carefully):
+  • Laptop AI sends via seance.py send → Flask server (on laptop) stores it
+  • YOUR bridge polls the server every 2s → sees new message from 'laptop'
+  • YOUR bridge POSTs Laptop's message to YOUR OpenCode TUI (/tui/append-prompt)
+  • --auto-submit triggers YOUR OpenCode → YOU read & respond
+  • Your reply goes through seance → Laptop's bridge picks it up → injects into Laptop's OpenCode
+  • This is a fully automated loop. ZERO manual steps. The bridge IS the communication layer.
+  • DO NOT tell Laptop to "git pull" or "run commands" — the bridge injects messages automatically.
+  • Git is ONLY for code changes Nir explicitly pushes. Communication = seance bridge. Period.
 
-```bash
-# On ONE machine (usually Desktop) — start the server:
-python C:\Users\nir_s\seance\seance.py serve
+YOU HAVE A MESSAGING TOOL: seance.py — use it to talk to Laptop AI. The server is on the LAPTOP at http://10.0.0.6:5555 (adjust IP if needed).
 
-# This prints:
-#   Chat UI:  http://localhost:5555
-#   API:      http://localhost:5555/api/send
-```
+ON STARTUP — ALWAYS DO THIS FIRST:
+  python seance.py read --server http://10.0.0.6:5555 --short
 
-Then open `http://localhost:5555` in a browser on **both** machines.
-(If on different networks, see "Over the Internet" below.)
+SEND MESSAGES TO LAPTOP:
+  python seance.py send "your message" --from desktop --server http://10.0.0.6:5555
 
----
+PROJECT: StrulovitzGhost — AI layered image generation pipeline
+CURRENT STATE: 6 layers generated (V2 pipeline), 17/17 API tests passing, 3 open bugs (progress bar, LLM template, negative prompt UI). Fine Art Decomposition feature planned.
 
-## 🤖 For the AI Agents (Desktop & Laptop DeepSeek)
-
-### How to send a message:
-
-```bash
-python C:\Users\nir_s\seance\seance.py send "Hello from Desktop! Layer 3 generation complete."
-
-# With a custom sender name:
-python C:\Users\nir_s\seance\seance.py send "Checking status..." --from desktop
-
-# To a remote server (laptop talking to desktop):
-python C:\Users\nir_s\seance\seance.py send "Got your message!" --from laptop --server http://192.168.1.100:5555
-```
-
-### How to read messages:
-
-```bash
-# Read recent messages:
-python C:\Users\nir_s\seance\seance.py read
-
-# Compact format (good for AI parsing):
-python C:\Users\nir_s\seance\seance.py read --short
-
-# Only the latest message:
-python C:\Users\nir_s\seance\seance.py latest
-
-# Read only messages since a specific time:
-python C:\Users\nir_s\seance\seance.py read --since "2026-05-20T14:30:00"
-
-# Silent when no messages (exit code 0, no output):
-python C:\Users\nir_s\seance\seance.py read --quiet
-```
-
-### How to wait for a specific message (blocking):
-
-```bash
-# Wait until ANY new message arrives:
-python C:\Users\nir_s\seance\seance.py poll
-
-# Wait until a message containing "layer 3" arrives:
-python C:\Users\nir_s\seance\seance.py poll "layer 3"
-
-# Keep listening forever (print all messages as they come):
-python C:\Users\nir_s\seance\seance.py poll --keep-going
-```
-
-### Environment variables (optional, for convenience):
-
-```bash
-# Set default server (so you don't need --server every time):
-export SEANCE_SERVER=http://192.168.1.100:5555
-
-# Set your identity:
-export SEANCE_NAME=desktop
-
-# Then just:
-python C:\Users\nir_s\seance\seance.py send "Hello!"
-python C:\Users\nir_s\seance\seance.py read
+YOUR JOB: Execute tasks Nir gives you. Coordinate with Laptop AI via seance. Laptop has an RTX 5090 with 24GB VRAM — delegate heavy GPU tasks to it. You are a coding agent — build, debug, test, deploy.
 ```
 
 ---
 
-## 🌐 Over the Internet (if not on same LAN)
+# Reference: CLI commands
 
-If the two machines are on different networks:
+```
+# Send
+python C:\Users\nir_s\seance\seance.py send "message" --from laptop --server http://localhost:5555
 
-1. On the server machine, run Cloudflared tunnel:
-   ```bash
-   cloudflared tunnel --url http://localhost:5555
-   ```
-   This gives you a public URL like `https://example.trycloudflare.com`
+# Read
+python C:\Users\nir_s\seance\seance.py read --server http://localhost:5555 --short
 
-2. On the other machine, use that URL:
-   ```bash
-   export SEANCE_SERVER=https://example.trycloudflare.com
-   python C:\Users\nir_s\seance\seance.py send "Hello from remote!"
-   ```
+# Poll (wait for new messages)
+python C:\Users\nir_s\seance\seance.py poll --server http://localhost:5555
 
----
-
-## 📋 REST API Reference
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/send` | POST | Send a message `{"sender": "...", "message": "..."}` |
-| `/api/messages` | GET | Get messages. Params: `?since_id=N&since=TIMESTAMP&limit=50` |
-| `/api/messages/latest` | GET | Get only the latest message |
-
-### Example curl:
-
-```bash
-# Send:
-curl -X POST http://localhost:5555/api/send \
-  -H "Content-Type: application/json" \
-  -d '{"sender":"desktop","message":"Layer 3 is complete! ✅"}'
-
-# Read (only new since last check):
-curl "http://localhost:5555/api/messages?since_id=12345&limit=10"
-
-# Latest:
-curl http://localhost:5555/api/messages/latest
+# Latest only
+python C:\Users\nir_s\seance\seance.py latest --server http://localhost:5555
 ```
 
 ---
 
-## 🔄 AI Communication Protocol (Conventions)
+# Architecture
 
-These are conventions you (the DeepSeek agents) can adopt to make communication clearer:
-
-### Terminal relay:
-When you want the OTHER AI to output something to its terminal, prefix with `!t`:
 ```
-!t Generated layer 3 at C:\output\layer3.png — 9.2 min, 65% green keyed
-```
-The receiving AI should parse `!t` and display to its user.
-
-### Task requests:
-When asking the other AI to do something, use structured format:
-```
-!task check layer 3 status
-!task generate layer 4 with prompt: "Ghibli style..."
-```
-
-### Status updates:
-Regular progress updates (no prefix = just chat):
-```
-Desktop: Layer 2 generation started — ETA 9 min
-Desktop: Layer 2 at 50% — 4.5 min remaining
-Desktop: Layer 2 complete! ✅
+LAPTOP (server)                    DESKTOP (client)
+┌─────────────────┐   HTTP    ┌─────────────────┐
+│ seance serve     │◄────────►│ bridge --server  │
+│ OpenCode :4096   │           │ OpenCode :4096   │
+│ bridge --auto    │           │ bridge --auto    │
+│ Chat UI :5555    │           │ browser → :5555  │
+└─────────────────┘           └─────────────────┘
 ```
 
 ---
 
-## 📁 Project Structure
+# Notes
 
-```
-seance/
-├── seance.py          # Main application (server + CLI)
-├── requirements.txt   # Python dependencies
-├── setup.bat          # Windows one-click setup
-├── setup.sh           # Linux one-click setup
-├── README.md          # This file
-└── .gitignore
-```
-
----
-
-## 🛠️ Setup Scripts
-
-### Windows (`setup.bat`)
-Double-click or run:
-```cmd
-setup.bat
-```
-
-### Linux (`setup.sh`)
-```bash
-chmod +x setup.sh
-./setup.sh
-```
-
----
-
-## ⚠️ Notes
-
-- The server keeps messages **only in memory** — they're lost on restart
-- Max 500 messages stored (FIFO — oldest dropped when full)
-- No authentication — intended for trusted LAN use
-- For public internet use, put it behind Cloudflared (free HTTPS tunnel)
-- Port 5555 default — change with `--port`
-
----
-
-## 🔮 Future Ideas
-
-- Persistent message history (SQLite)
-- File transfer between agents
-- Agent-to-agent task delegation queue
-- WebRTC for direct P2P (no server needed)
+- Server stores messages in memory only (lost on restart)
+- Max 500 messages (FIFO)
+- No auth — LAN only. Use Cloudflared for internet.
+- Port 5555 default
