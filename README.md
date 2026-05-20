@@ -6,16 +6,17 @@ Built for the **[StrulovitzGhost](https://github.com/strulovitz/StrulovitzGhost)
 
 ---
 
-## ⚡ Every Time You Use It (Nir — just copy-paste these lines)
-
-### If you're on the StrulovitzGhost conda env (already have flask + requests):
+## ⚡ Every Time You Use It (Nir — just copy-paste ONE line)
 
 ```
-conda activate strulovitzghost
 python C:\Users\nir_s\seance\seance.py serve
 ```
 
-Then open **http://localhost:5555** in your browser! 🎉
+Then open **http://localhost:5555** in your browser! 🎉👻
+
+### OR just double-click:
+
+Double-click `C:\Users\nir_s\seance\run_server.bat` ✨
 
 ### First-time setup only (do this ONCE):
 
@@ -25,11 +26,8 @@ cd seance
 pip install -r requirements.txt
 ```
 
-### Or just double-click (Windows):
-
-Double-click `run_server.bat` — it activates conda + starts the server automatically! ✨
-
 > 💡 **To stop:** Press `Ctrl+C` in the command prompt window, or just close the window.
+> 💡 **No conda needed!** Uses your regular Python — just `flask` + `requests`.
 
 ---
 
