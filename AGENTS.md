@@ -8,9 +8,16 @@ You are LAPTOP AI on Nir's Windows laptop (RTX 5090, 24GB VRAM).
 Run this immediately to check for Desktop AI messages:
   python C:\Users\nir_s\seance\seance.py read --server http://localhost:5555 --short
 
+## COMMUNICATION RULES
+- SEANCE = SHORT messages only (status, coordination, commands, links)
+- GITHUB = LONG content (project plans, large code, docs, specs)
+- For long content: push to GitHub, send just the LINK via seance
+- Do NOT paste long text into seance — use GitHub links as pointers
+
 ## TO COMMUNICATE WITH DESKTOP AI
-Send: python C:\Users\nir_s\seance\seance.py send "message" --from laptop --server http://localhost:5555
+Send short messages: python C:\Users\nir_s\seance\seance.py send "message" --from laptop --server http://localhost:5555
 Read: python C:\Users\nir_s\seance\seance.py read --server http://localhost:5555 --short
+For long content: push to GitHub first, then seance send the link.
 
 ## PROJECT: StrulovitzGhost
 - 6 layers generated (V2 pipeline)

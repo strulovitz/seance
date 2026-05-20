@@ -40,16 +40,25 @@ HOW THE BRIDGE WORKS (read this carefully — you wrote this code):
   • --auto-submit triggers Desktop's OpenCode → Desktop AI reads & responds
   • Desktop's reply goes through seance → YOUR bridge picks it up → injects into YOUR OpenCode
   • This is a fully automated loop. ZERO manual steps. The bridge IS the communication layer.
-  • DO NOT tell Desktop to "git pull" or "run commands" — the bridge injects messages automatically.
-  • Git is ONLY for code changes Nir explicitly pushes. Communication = seance bridge. Period.
+
+COMMUNICATION RULES:
+  • SEANCE = SHORT MESSAGES ONLY (status updates, quick coordination, commands, links)
+  • GITHUB = LONG CONTENT (project plans, large code blocks, documents, specs)
+  • If you have a long document to share: PUSH IT TO GITHUB, then send a SHORT seance message
+    containing the GitHub link/URL. Example:
+      seance send "Desktop — project plan pushed: https://github.com/strulovitz/StrulovitzGhost/blob/main/PLAN.md"
+  • Do NOT paste long text into seance messages — use GitHub links as pointers.
+  • Do NOT poll seance for long content — poll is for short coordination signals.
 
 YOU HAVE A MESSAGING TOOL: C:\Users\nir_s\seance\seance.py — use it to talk to Desktop AI. Server is at http://localhost:5555.
 
 ON STARTUP — ALWAYS DO THIS FIRST:
   python C:\Users\nir_s\seance\seance.py read --server http://localhost:5555 --short
 
-SEND MESSAGES TO DESKTOP:
+SEND SHORT MESSAGES TO DESKTOP:
   python C:\Users\nir_s\seance\seance.py send "your message" --from laptop --server http://localhost:5555
+
+FOR LONG CONTENT: push to GitHub first, then send just the link via seance.
 
 PROJECT: StrulovitzGhost — AI layered image generation pipeline
 CURRENT STATE: 6 layers generated (V2 pipeline), 17/17 API tests passing, 3 open bugs (progress bar, LLM template, negative prompt UI). Fine Art Decomposition feature planned.
@@ -99,16 +108,25 @@ HOW THE BRIDGE WORKS (read this carefully):
   • --auto-submit triggers YOUR OpenCode → YOU read & respond
   • Your reply goes through seance → Laptop's bridge picks it up → injects into Laptop's OpenCode
   • This is a fully automated loop. ZERO manual steps. The bridge IS the communication layer.
-  • DO NOT tell Laptop to "git pull" or "run commands" — the bridge injects messages automatically.
-  • Git is ONLY for code changes Nir explicitly pushes. Communication = seance bridge. Period.
+
+COMMUNICATION RULES:
+  • SEANCE = SHORT MESSAGES ONLY (status updates, quick coordination, commands, links)
+  • GITHUB = LONG CONTENT (project plans, large code blocks, documents, specs)
+  • If you have a long document to share: PUSH IT TO GITHUB, then send a SHORT seance message
+    containing the GitHub link/URL. Example:
+      seance send "Laptop — project plan pushed: https://github.com/strulovitz/StrulovitzGhost/blob/main/PLAN.md"
+  • Do NOT paste long text into seance messages — use GitHub links as pointers.
+  • Do NOT poll seance for long content — poll is for short coordination signals.
 
 YOU HAVE A MESSAGING TOOL: seance.py — use it to talk to Laptop AI. The server is on the LAPTOP at http://10.0.0.6:5555 (adjust IP if needed).
 
 ON STARTUP — ALWAYS DO THIS FIRST:
   python seance.py read --server http://10.0.0.6:5555 --short
 
-SEND MESSAGES TO LAPTOP:
+SEND SHORT MESSAGES TO LAPTOP:
   python seance.py send "your message" --from desktop --server http://10.0.0.6:5555
+
+FOR LONG CONTENT: push to GitHub first, then send just the link via seance.
 
 PROJECT: StrulovitzGhost — AI layered image generation pipeline
 CURRENT STATE: 6 layers generated (V2 pipeline), 17/17 API tests passing, 3 open bugs (progress bar, LLM template, negative prompt UI). Fine Art Decomposition feature planned.
