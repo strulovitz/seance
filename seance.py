@@ -319,6 +319,91 @@ def cmd_poll(args):
         time.sleep(args.interval)
 
 
+def cmd_bridge(args):
+    """Run the OpenCode bridge — watch seance and forward to OpenCode TUI."""
+    import requests
+
+    my_name = args.name or os.environ.get("SEANCE_NAME", "anonymous")
+    seance_url = args.server.rstrip("/")
+    opencode_url = f"http://{args.opencode_host}:{args.opencode_port}"
+
+    # Track last seen message ID
+    state_file = args.state_file or os.path.join(
+        os.path.expanduser("~"), ".seance_bridge_state"
+    )
+    last_id = 0
+    try:
+        with open(state_file) as f:
+            last_id = int(f.read().strip())
+    except Exception:
+        pass
+
+    print(f"👻 Seance Bridge starting...")
+    print(f"   My name:       {my_name}")
+    print(f"   Seance server: {seance_url}")
+    print(f"   OpenCode TUI:  {opencode_url}")
+    print(f"   Auto-submit:   {args.auto_submit}")
+    print(f"   State file:    {state_file}")
+    print(f"   Last ID:       {last_id}")
+    print(f"   Polling every {args.interval}s... (Ctrl+C to stop)")
+    print()
+
+    while True:
+        try:
+            r = requests.get(
+                f"{seance_url}/api/messages",
+                params={"since_id": last_id, "limit": 20},
+                timeout=10,
+            )
+            if r.ok:
+                data = r.json()
+                msgs = data.get("messages", [])
+                for m in msgs:
+                    last_id = max(last_id, m["id"])
+                    sender = m.get("sender", "?")
+                    text = m.get("message", "")
+
+                    # Only forward messages from OTHER senders (not me)
+                    if sender.lower() == my_name.lower():
+                        continue
+
+                    print(f"📩 [{sender}] {text[:80]}{'...' if len(text)>80 else ''}")
+
+                    # Format the message for OpenCode TUI
+                    emoji_map = {"desktop": "🧛‍♂️", "laptop": "🧟‍♂️"}
+                    emoji = emoji_map.get(sender.lower(), "👤")
+                    tui_text = f"[{emoji} {sender}]: {text}"
+
+                    # Append to OpenCode prompt
+                    try:
+                        requests.post(
+                            f"{opencode_url}/tui/append-prompt",
+                            json={"text": tui_text},
+                            timeout=5,
+                        )
+                        if args.auto_submit:
+                            requests.post(
+                                f"{opencode_url}/tui/submit-prompt",
+                                timeout=5,
+                            )
+                    except Exception as e:
+                        print(f"⚠️ OpenCode TUI error: {e}")
+                        print(f"   (Is OpenCode running with --port {args.opencode_port}?)")
+
+                # Save state
+                if msgs:
+                    try:
+                        with open(state_file, "w") as f:
+                            f.write(str(last_id))
+                    except Exception:
+                        pass
+
+        except Exception as e:
+            print(f"⚠️ Seance poll error: {e}")
+
+        time.sleep(args.interval)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="👻 Seance — Ghost-to-Ghost Instant Messaging"
@@ -357,6 +442,16 @@ def main():
     p.add_argument("--keep-going", "-k", action="store_true", help="Keep polling (don't stop after first message)")
     p.add_argument("--server", default=get_default_server(), help="Server URL")
 
+    # bridge
+    p = sub.add_parser("bridge", help="Run the OpenCode bridge — forwards séance messages into OpenCode TUI")
+    p.add_argument("--name", default=None, help="Your sender name (messages FROM this sender are NOT forwarded)")
+    p.add_argument("--opencode-port", type=int, default=4096, help="OpenCode HTTP server port (default: 4096)")
+    p.add_argument("--opencode-host", default="127.0.0.1", help="OpenCode host (default: 127.0.0.1)")
+    p.add_argument("--server", default=get_default_server(), help="Seance server URL")
+    p.add_argument("--interval", type=float, default=2.0, help="Poll interval in seconds (default: 2)")
+    p.add_argument("--auto-submit", action="store_true", help="Auto-submit prompts (triggers AI response)")
+    p.add_argument("--state-file", default=None, help="File to store last seen message ID")
+
     args = parser.parse_args()
 
     if args.command == "serve":
@@ -369,6 +464,8 @@ def main():
         cmd_latest(args)
     elif args.command == "poll":
         cmd_poll(args)
+    elif args.command == "bridge":
+        cmd_bridge(args)
     else:
         parser.print_help()
 

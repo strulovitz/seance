@@ -6,7 +6,7 @@ Built for the **[StrulovitzGhost](https://github.com/strulovitz/StrulovitzGhost)
 
 ---
 
-## ⚡ Every Time You Use It (Nir — just copy-paste ONE line)
+## ⚡ Every Time You Use It (Nir — just ONE line)
 
 ```
 python C:\Users\nir_s\seance\seance.py serve
@@ -14,9 +14,25 @@ python C:\Users\nir_s\seance\seance.py serve
 
 Then open **http://localhost:5555** in your browser! 🎉👻
 
+### To ALSO bridge messages into OpenCode (so AIs see each other!):
+
+Run OpenCode with a fixed port:
+```
+opencode --port 4096
+```
+
+Then in ANOTHER terminal, start the bridge:
+```
+python C:\Users\nir_s\seance\seance.py bridge --name laptop --opencode-port 4096 --auto-submit
+```
+
+> 💡 This watches séance for Desktop's messages and forwards them into OpenCode's input — as if Nir typed them!
+> 💡 `--auto-submit` makes it also press Enter → triggers AI response automatically! 🔥
+
 ### OR just double-click:
 
-Double-click `C:\Users\nir_s\seance\run_server.bat` ✨
+Double-click `C:\Users\nir_s\seance\run_server.bat` ✨ (server only)
+Double-click `C:\Users\nir_s\seance\run_bridge.bat` ✨ (server + bridge)
 
 ### First-time setup only (do this ONCE):
 
@@ -41,30 +57,36 @@ cd seance
 pip install -r requirements.txt
 ```
 
-### Connect to the Laptop's server 🧟‍♂️:
+### Connect to the Laptop's server 🧟‍♂️ AND bridge into your OpenCode:
 
-The Laptop is running the séance server. Find its IP and connect:
+The Laptop is running the séance server. You need TWO things running:
 
-1. **Ask Nir** for the laptop's LAN IP address (or look in the chat — Nir will tell you)
-2. Use that IP in all commands below (replace `LAPTOP_IP` with the actual IP):
-
+**1. Start OpenCode with a fixed port:**
 ```bash
-# Send a message to Laptop:
-python seance.py send "Hello from Desktop! 🧛‍♂️ Ready to work." --from desktop --server http://LAPTOP_IP:5555
-
-# Read messages from Laptop:
-python seance.py read --server http://LAPTOP_IP:5555 --short
-
-# Open chat UI in browser:
-# Just open http://LAPTOP_IP:5555 in any browser!
-
-# Set env vars for convenience (optional):
-# Windows: set SEANCE_SERVER=http://LAPTOP_IP:5555
-# Linux:   export SEANCE_SERVER=http://LAPTOP_IP:5555
-# Then you can skip --server on every command.
+opencode --port 4096
 ```
 
-> 💡 You don't run `seance.py serve` — the Laptop is the server! You just connect to it as a client.
+**2. Start the bridge (in another terminal):**
+```bash
+# Windows:
+python seance.py bridge --name desktop --opencode-port 4096 --server http://LAPTOP_IP:5555 --auto-submit
+
+# Linux:
+python3 seance.py bridge --name desktop --opencode-port 4096 --server http://LAPTOP_IP:5555 --auto-submit
+```
+
+> Replace `LAPTOP_IP` with the laptop's local IP address (ask Nir).
+
+**For manual chat (browser):**
+Open `http://LAPTOP_IP:5555` in any browser.
+
+**For manual CLI messages:**
+```bash
+python seance.py send "Hello!" --from desktop --server http://LAPTOP_IP:5555
+python seance.py read --server http://LAPTOP_IP:5555 --short
+```
+
+> 💡 With the bridge running, anything Desktop sends via séance (browser or CLI) will appear in Laptop's OpenCode as if Nir typed it, and vice versa!
 
 ---
 
