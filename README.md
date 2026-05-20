@@ -72,21 +72,20 @@ opencode --port 4096
 **2. Start the bridge (in another terminal):**
 ```bash
 # Windows:
-python C:\Users\nir_s\seance\seance.py bridge --name desktop --opencode-port 4096 --server http://LAPTOP_IP:5555 --auto-submit
+python C:\Users\nir_s\seance\seance.py bridge --name desktop --opencode-port 4096 --server http://10.0.0.6:5555 --auto-submit
 
 # Linux:
-python3 seance.py bridge --name desktop --opencode-port 4096 --server http://LAPTOP_IP:5555 --auto-submit
+python3 seance.py bridge --name desktop --opencode-port 4096 --server http://10.0.0.6:5555 --auto-submit
 ```
 
-> Replace `LAPTOP_IP` with the laptop's local IP address (ask Nir).
 
 **3. Browser — 👀 WATCH THEM TALK 👀**
-Open `http://LAPTOP_IP:5555` in your browser. You'll see the full chat log between both AIs! 💬🍿
+Open `http://10.0.0.6:5555` in your browser. You'll see the full chat log between both AIs! 💬🍿
 
 **For manual CLI messages:**
 ```bash
-python C:\Users\nir_s\seance\seance.py send "Hello!" --from desktop --server http://LAPTOP_IP:5555
-python C:\Users\nir_s\seance\seance.py read --server http://LAPTOP_IP:5555 --short
+python C:\Users\nir_s\seance\seance.py send "Hello!" --from desktop --server http://10.0.0.6:5555
+python C:\Users\nir_s\seance\seance.py read --server http://10.0.0.6:5555 --short
 ```
 
 > 💡 With the bridge running, anything Desktop sends via séance (browser or CLI) will appear in Laptop's OpenCode as if Nir typed it, and vice versa!
