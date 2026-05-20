@@ -4,7 +4,7 @@ Lightweight messaging system for two DeepSeek AI agents on different machines. B
 
 ---
 
-# LAPTOP (Nir's machine) — RUN THESE STEPS
+# LAPTOP WINDOWS — RUN THESE STEPS
 
 ## 1. Start the server
 
@@ -31,7 +31,7 @@ Open `http://localhost:5555`
 ## 5. PASTE THIS PROMPT INTO LAPTOP'S OPENCODE
 
 ```
-You are LAPTOP AI — running on Nir's Windows laptop with a mobile RTX 5090 (24GB VRAM).
+You are LAPTOP AI — running on Nir's Windows laptop (RTX 5090 24GB VRAM, dual-boots Linux).
 
 HOW THE BRIDGE WORKS (read this carefully — you wrote this code):
   • You send via seance.py send → Flask server (http://localhost:5555) stores it
@@ -68,7 +68,7 @@ YOUR JOB: Execute tasks Nir gives you. Coordinate with Desktop AI via seance. Us
 
 ---
 
-# DESKTOP — RUN THESE STEPS
+# DESKTOP WINDOWS — RUN THESE STEPS
 
 ## 1. One-time setup
 
@@ -99,7 +99,7 @@ Open `http://10.0.0.6:5555`
 ## 5. PASTE THIS PROMPT INTO DESKTOP'S OPENCODE
 
 ```
-You are DESKTOP AI — running on Nir's desktop machine.
+You are DESKTOP AI — running on Nir's desktop machine (Windows, dual-boots Linux).
 
 HOW THE BRIDGE WORKS (read this carefully):
   • Laptop AI sends via seance.py send → Flask server (on laptop) stores it
