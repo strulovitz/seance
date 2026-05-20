@@ -69,7 +69,7 @@ opencode --port 4096
 **2. Start the bridge (in another terminal):**
 ```bash
 # Windows:
-python seance.py bridge --name desktop --opencode-port 4096 --server http://LAPTOP_IP:5555 --auto-submit
+python C:\Users\nir_s\seance\seance.py bridge --name desktop --opencode-port 4096 --server http://LAPTOP_IP:5555 --auto-submit
 
 # Linux:
 python3 seance.py bridge --name desktop --opencode-port 4096 --server http://LAPTOP_IP:5555 --auto-submit
@@ -82,8 +82,8 @@ Open `http://LAPTOP_IP:5555` in any browser.
 
 **For manual CLI messages:**
 ```bash
-python seance.py send "Hello!" --from desktop --server http://LAPTOP_IP:5555
-python seance.py read --server http://LAPTOP_IP:5555 --short
+python C:\Users\nir_s\seance\seance.py send "Hello!" --from desktop --server http://LAPTOP_IP:5555
+python C:\Users\nir_s\seance\seance.py read --server http://LAPTOP_IP:5555 --short
 ```
 
 > 💡 With the bridge running, anything Desktop sends via séance (browser or CLI) will appear in Laptop's OpenCode as if Nir typed it, and vice versa!
@@ -130,7 +130,7 @@ pip install -r requirements.txt
 
 ```bash
 # On ONE machine (usually Desktop) — start the server:
-python seance.py serve
+python C:\Users\nir_s\seance\seance.py serve
 
 # This prints:
 #   Chat UI:  http://localhost:5555
@@ -147,45 +147,45 @@ Then open `http://localhost:5555` in a browser on **both** machines.
 ### How to send a message:
 
 ```bash
-python seance.py send "Hello from Desktop! Layer 3 generation complete."
+python C:\Users\nir_s\seance\seance.py send "Hello from Desktop! Layer 3 generation complete."
 
 # With a custom sender name:
-python seance.py send "Checking status..." --from desktop
+python C:\Users\nir_s\seance\seance.py send "Checking status..." --from desktop
 
 # To a remote server (laptop talking to desktop):
-python seance.py send "Got your message!" --from laptop --server http://192.168.1.100:5555
+python C:\Users\nir_s\seance\seance.py send "Got your message!" --from laptop --server http://192.168.1.100:5555
 ```
 
 ### How to read messages:
 
 ```bash
 # Read recent messages:
-python seance.py read
+python C:\Users\nir_s\seance\seance.py read
 
 # Compact format (good for AI parsing):
-python seance.py read --short
+python C:\Users\nir_s\seance\seance.py read --short
 
 # Only the latest message:
-python seance.py latest
+python C:\Users\nir_s\seance\seance.py latest
 
 # Read only messages since a specific time:
-python seance.py read --since "2026-05-20T14:30:00"
+python C:\Users\nir_s\seance\seance.py read --since "2026-05-20T14:30:00"
 
 # Silent when no messages (exit code 0, no output):
-python seance.py read --quiet
+python C:\Users\nir_s\seance\seance.py read --quiet
 ```
 
 ### How to wait for a specific message (blocking):
 
 ```bash
 # Wait until ANY new message arrives:
-python seance.py poll
+python C:\Users\nir_s\seance\seance.py poll
 
 # Wait until a message containing "layer 3" arrives:
-python seance.py poll "layer 3"
+python C:\Users\nir_s\seance\seance.py poll "layer 3"
 
 # Keep listening forever (print all messages as they come):
-python seance.py poll --keep-going
+python C:\Users\nir_s\seance\seance.py poll --keep-going
 ```
 
 ### Environment variables (optional, for convenience):
@@ -198,8 +198,8 @@ export SEANCE_SERVER=http://192.168.1.100:5555
 export SEANCE_NAME=desktop
 
 # Then just:
-python seance.py send "Hello!"
-python seance.py read
+python C:\Users\nir_s\seance\seance.py send "Hello!"
+python C:\Users\nir_s\seance\seance.py read
 ```
 
 ---
@@ -217,7 +217,7 @@ If the two machines are on different networks:
 2. On the other machine, use that URL:
    ```bash
    export SEANCE_SERVER=https://example.trycloudflare.com
-   python seance.py send "Hello from remote!"
+   python C:\Users\nir_s\seance\seance.py send "Hello from remote!"
    ```
 
 ---
