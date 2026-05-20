@@ -1,5 +1,4 @@
 @echo off
-call conda activate strulovitzghost
 cd /d "%~dp0"
 echo.
 echo  ========================================
