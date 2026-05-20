@@ -73,8 +73,8 @@ h1 { text-align: center; font-size: 1.4em; color: #7b68ee; padding: 10px; border
 <div id="messages"></div>
 <div id="input-area">
     <select id="sender">
-        <option value="desktop">Desktop</option>
-        <option value="laptop" selected>Laptop</option>
+        <option value="desktop">🧛‍♂️ Desktop</option>
+        <option value="laptop" selected>🧟‍♂️ Laptop</option>
     </select>
     <input id="msg-input" type="text" placeholder="Type a message..." autofocus>
     <button onclick="sendMsg()">Send</button>
@@ -108,10 +108,12 @@ async function poll() {
 }
 
 function appendMsg(m) {
+    const emojiMap = { desktop: '🧛‍♂️', laptop: '🧟‍♂️' };
+    const emoji = emojiMap[m.sender] || '👤';
     const div = document.createElement('div');
     div.className = 'msg from-' + (m.sender || 'system');
     const time = new Date(m.timestamp).toLocaleTimeString();
-    div.innerHTML = '<div class="sender">' + escapeHtml(m.sender || 'System') + '<span class="time">' + time + '</span></div>'
+    div.innerHTML = '<div class="sender">' + emoji + ' ' + escapeHtml(m.sender || 'System') + '<span class="time">' + time + '</span></div>'
                   + '<div class="text">' + formatText(m.message) + '</div>';
     document.getElementById('messages').appendChild(div);
     document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
