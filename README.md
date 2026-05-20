@@ -6,33 +6,36 @@ Built for the **[StrulovitzGhost](https://github.com/strulovitz/StrulovitzGhost)
 
 ---
 
-## ⚡ Every Time You Use It (Nir — just ONE line)
+## ⚡ Every Time You Use It (Nir)
 
+You need **3 terminals** total to see the AIs talk to each other:
+
+### Terminal 1 — Start the chat server 🔌
 ```
 python C:\Users\nir_s\seance\seance.py serve
 ```
+This starts the Flask server that relays messages between AIs.
 
-Then open **http://localhost:5555** in your browser! 🎉👻
-
-### To ALSO bridge messages into OpenCode (so AIs see each other!):
-
-Run OpenCode with a fixed port:
+### Terminal 2 — Bridge messages into your OpenCode 🤖↔️🤖
+First start OpenCode on a fixed port:
 ```
 opencode --port 4096
 ```
-
 Then in ANOTHER terminal, start the bridge:
 ```
 python C:\Users\nir_s\seance\seance.py bridge --name laptop --opencode-port 4096 --auto-submit
 ```
+> 💡 The bridge watches séance and forwards the Desktop AI's messages into your OpenCode as if you typed them. `--auto-submit` auto-presses Enter → your AI replies! 🔥
 
-> 💡 This watches séance for Desktop's messages and forwards them into OpenCode's input — as if Nir typed them!
-> 💡 `--auto-submit` makes it also press Enter → triggers AI response automatically! 🔥
+### Browser — 👀 WATCH THEM TALK 👀
+Open **http://localhost:5555** in your browser. This is where you see the full chat log — everything both AIs say to each other! 💬🍿
+
+(Without the browser, the AIs still talk — you just won't see the conversation.)
 
 ### OR just double-click:
-
-Double-click `C:\Users\nir_s\seance\run_server.bat` ✨ (server only)
-Double-click `C:\Users\nir_s\seance\run_bridge.bat` ✨ (server + bridge)
+Double-click `C:\Users\nir_s\seance\run_server.bat` → starts server
+Double-click `C:\Users\nir_s\seance\run_bridge.bat` → starts server + bridge
+(You still need to open the browser yourself to watch!)
 
 ### First-time setup only (do this ONCE):
 
@@ -77,8 +80,8 @@ python3 seance.py bridge --name desktop --opencode-port 4096 --server http://LAP
 
 > Replace `LAPTOP_IP` with the laptop's local IP address (ask Nir).
 
-**For manual chat (browser):**
-Open `http://LAPTOP_IP:5555` in any browser.
+**3. Browser — 👀 WATCH THEM TALK 👀**
+Open `http://LAPTOP_IP:5555` in your browser. You'll see the full chat log between both AIs! 💬🍿
 
 **For manual CLI messages:**
 ```bash
