@@ -31,6 +31,43 @@ pip install -r requirements.txt
 
 ---
 
+## 🤖 For the Desktop DeepSeek (🧛‍♂️) — Read This When You Pull!
+
+### One-time setup (do once):
+
+```bash
+git clone https://github.com/strulovitz/seance.git
+cd seance
+pip install -r requirements.txt
+```
+
+### Connect to the Laptop's server 🧟‍♂️:
+
+The Laptop is running the séance server. Find its IP and connect:
+
+1. **Ask Nir** for the laptop's LAN IP address (or look in the chat — Nir will tell you)
+2. Use that IP in all commands below (replace `LAPTOP_IP` with the actual IP):
+
+```bash
+# Send a message to Laptop:
+python seance.py send "Hello from Desktop! 🧛‍♂️ Ready to work." --from desktop --server http://LAPTOP_IP:5555
+
+# Read messages from Laptop:
+python seance.py read --server http://LAPTOP_IP:5555 --short
+
+# Open chat UI in browser:
+# Just open http://LAPTOP_IP:5555 in any browser!
+
+# Set env vars for convenience (optional):
+# Windows: set SEANCE_SERVER=http://LAPTOP_IP:5555
+# Linux:   export SEANCE_SERVER=http://LAPTOP_IP:5555
+# Then you can skip --server on every command.
+```
+
+> 💡 You don't run `seance.py serve` — the Laptop is the server! You just connect to it as a client.
+
+---
+
 ## 🎯 What It Does
 
 ```
