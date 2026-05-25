@@ -131,14 +131,14 @@ opencode --port 4096
 ## 3. Start the bridge (in another terminal)
 
 ```
-python seance.py bridge --name desktop --opencode-port 4096 --server http://10.0.0.6:5555 --auto-submit
+python seance.py bridge --name desktop --opencode-port 4096 --server http://10.0.0.5:5555 --auto-submit
 ```
 
-(Replace `10.0.0.6` with the laptop's actual IP.)
+(Replace `10.0.0.5` with the laptop's actual IP.)
 
 ## 4. Watch the chat in browser
 
-Open `http://10.0.0.6:5555`
+Open `http://10.0.0.5:5555`
 
 ## 5. PASTE THIS PROMPT INTO DESKTOP'S OPENCODE
 
@@ -190,7 +190,7 @@ COMMUNICATION RULES:
   • GITHUB = LONG CONTENT (project plans, large code blocks, documents, specs)
   • If you have a long document to share: PUSH IT TO GITHUB, then send a SHORT seance message
     containing ONLY the GitHub link/URL. Example:
-      python C:\Users\nir_s\seance\seance.py send "Desktop — plan: https://github.com/StrulovitzGhost/PLAN.md" --from desktop --server http://10.0.0.6:5555
+      python C:\Users\nir_s\seance\seance.py send "Desktop — plan: https://github.com/StrulovitzGhost/PLAN.md" --from desktop --server http://10.0.0.5:5555
   • Do NOT paste long text into seance messages. Use GitHub links as pointers.
   • Do NOT poll seance for long content. Seance is for short coordination signals only.
 
@@ -199,10 +199,10 @@ SEANCE COMMANDS:
 ═══════════════════════════════════════════
 
 ON STARTUP — ALWAYS DO THIS FIRST:
-  python C:\Users\nir_s\seance\seance.py read --server http://10.0.0.6:5555 --short
+  python C:\Users\nir_s\seance\seance.py read --server http://10.0.0.5:5555 --short
 
 SEND SHORT MESSAGE TO LAPTOP:
-  python C:\Users\nir_s\seance\seance.py send "your message" --from desktop --server http://10.0.0.6:5555
+  python C:\Users\nir_s\seance\seance.py send "your message" --from desktop --server http://10.0.0.5:5555
 
 ═══════════════════════════════════════════
 PROJECT STATE:
